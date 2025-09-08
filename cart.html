@@ -2,34 +2,55 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ตะกร้าสินค้า</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background: #f2f2f2; }
+    .btn { padding: 6px 12px; border: none; cursor: pointer; border-radius: 5px; }
+    .btn-danger { background: #dc3545; color: white; }
+    .btn-danger:hover { background: #c82333; }
+    .btn-primary { background: #007bff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+  </style>
 </head>
 <body>
   <h1>ตะกร้าสินค้า</h1>
-  <div id="cart-items"></div>
-  <h3>รวมทั้งหมด: <span id="total">0</span> บาท</h3>
-  <a href="checkout.html"><button>สั่งซื้อสินค้า</button></a>
-  <a href="index.html"><button>กลับไปหน้าร้าน</button></a>
+  <table id="cart-table">
+    <tr><th>สินค้า</th><th>ราคา</th><th>ลบ</th></tr>
+  </table>
+  <h2>รวม: <span id="total">0</span> บาท</h2>
+  <a href="checkout.html"><button class="btn btn-primary">สั่งซื้อ</button></a>
+  <a href="index.html"><button class="btn">เลือกซื้อสินค้าต่อ</button></a>
 
   <script>
-    function getCart() {
-      return JSON.parse(localStorage.getItem("cart") || "[]");
-    }
-
-    function displayCart() {
-      let cart = getCart();
-      let cartDiv = document.getElementById("cart-items");
+    function loadCart() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let table = document.getElementById("cart-table");
       let total = 0;
-      cartDiv.innerHTML = "";
-      cart.forEach((item, index) => {
-        cartDiv.innerHTML += "<p>" + item.name + " - " + item.price + " บาท</p>";
-        total += item.price;
-      });
-      document.getElementById("total").innerText = total;
+      for (let i=0; i<cart.length; i++) {
+        let row = table.insertRow();
+        row.insertCell(0).textContent = cart[i].name;
+        row.insertCell(1).textContent = cart[i].price + " บาท";
+        let btn = document.createElement("button");
+        btn.textContent = "ลบ";
+        btn.className = "btn btn-danger";
+        btn.onclick = function() { removeItem(i); };
+        row.insertCell(2).appendChild(btn);
+        total += cart[i].price;
+      }
+      document.getElementById("total").textContent = total;
     }
 
-    displayCart();
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      location.reload();
+    }
+    loadCart();
   </script>
 </body>
 </html>
