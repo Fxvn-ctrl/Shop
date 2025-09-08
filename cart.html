@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตะกร้าสินค้า</title>
+</head>
+<body>
+  <h1>ตะกร้าสินค้า</h1>
+  <div id="cart-items"></div>
+  <h3>รวมทั้งหมด: <span id="total">0</span> บาท</h3>
+  <a href="checkout.html"><button>สั่งซื้อสินค้า</button></a>
+  <a href="index.html"><button>กลับไปหน้าร้าน</button></a>
+
+  <script>
+    function getCart() {
+      return JSON.parse(localStorage.getItem("cart") || "[]");
+    }
+
+    function displayCart() {
+      let cart = getCart();
+      let cartDiv = document.getElementById("cart-items");
+      let total = 0;
+      cartDiv.innerHTML = "";
+      cart.forEach((item, index) => {
+        cartDiv.innerHTML += "<p>" + item.name + " - " + item.price + " บาท</p>";
+        total += item.price;
+      });
+      document.getElementById("total").innerText = total;
+    }
+
+    displayCart();
+  </script>
+</body>
+</html>
